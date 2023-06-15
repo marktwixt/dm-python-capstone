@@ -1,7 +1,8 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
-from models import User, Project, Task, Equipment, TrailSystem, ExpenseReport, db, login_manager, app
+from models import User, Project, Task, Equipment, TrailSystem, ExpenseReport, db
+from app import login_manager, app
 from forms import ProjectForm, TaskForm, TrailSystemForm, ExpenseReportForm
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
