@@ -5,7 +5,6 @@ from flask_login import LoginManager, UserMixin
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/trail_management'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'your secret key'
 
 db = SQLAlchemy(app)
 
@@ -21,8 +20,18 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
+    equipment = db.relationship('Equipment', backref='user', lazy=True)
     projects = db.relationship('Project', backref='user', lazy=True)
+    expense_reports = db.relationship('ExpenseReport', backref='user', lazy=True)
 
+class Equipment(db.Model):
+    __tablename__ = 'equipment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    maintenance_schedule = db.Column(db.String(128), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 class Project(db.Model):
     __tablename__ = 'projects'
@@ -33,9 +42,9 @@ class Project(db.Model):
     status = db.Column(db.String(64), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    trail_system_id = db.Column(db.Integer, db.ForeignKey('trail_systems.id'), nullable=False)
 
     tasks = db.relationship('Task', backref='project', lazy=True)
-
 
 class Task(db.Model):
     __tablename__ = 'tasks'
@@ -47,22 +56,28 @@ class Task(db.Model):
 
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
 
-
-class Equipment(db.Model):
-    __tablename__ = 'equipment'
+class TrailSystem(db.Model):
+    __tablename__ = 'trail_systems'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(64), nullable=False)
-    maintenance_schedule = db.Column(db.String(128), nullable=False)
+    location = db.Column(db.String(255))
+    map = db.Column(db.LargeBinary)  # Adjust as needed for your method of storing maps
+    description = db.Column(db.Text)
 
+    projects = db.relationship('Project', backref='trail_system', lazy=True)
+
+class ExpenseReport(db.Model):
+    __tablename__ = 'expense_reports'
+
+    id = db.Column(db.Integer, primary_key=True)
+    date_submitted = db.Column(db.Date)
+    expense_details = db.Column(db.Text)
+    amount = db.Column(db.Numeric(9, 2))  # Decimal for currency
+    status = db.Column(db.String(64))  # Adjust as needed
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Create all tables
-    app.run(debug=True)

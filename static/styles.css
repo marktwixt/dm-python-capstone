@@ -1,0 +1,60 @@
+:root {
+    --primary: #667B76;
+    --accent: #F57921;
+    --gray: #C6C7C9;
+    --light: #EFC489;
+    --white: #FEFEFE;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--white);
+    color: var(--primary);
+    padding: 20px;
+}
+
+h1 {
+    color: var(--accent);
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+form {
+    background-color: var(--light);
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+form input, form textarea {
+    width: 100%;
+    border: 1px solid var(--gray);
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: var(--primary);
+}
