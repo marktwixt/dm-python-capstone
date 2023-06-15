@@ -58,5 +58,6 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    db.create_all()  # Create all tables
+    with app.app_context():
+        db.create_all()  # Create all tables
     app.run(debug=True)
