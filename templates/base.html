@@ -3,40 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Trail Management System</title>
-    <!-- Add the link to your CSS file here -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <nav>
-        <!-- Add navigation links here -->
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('trail_systems') }}">Trail Systems</a>
-        <a href="{{ url_for('equipment') }}">Equipment</a>
-        <a href="{{ url_for('projects') }}">Projects</a>
-        <a href="{{ url_for('tasks') }}">Tasks</a>
-        <a href="{{ url_for('expense_reports') }}">Expense Reports</a>
-        <!-- Add login/logout links -->
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
-        {% endif %}
-    </nav>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-logo"></div>
+            <!-- navigation links -->
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('users') }}">Users</a>
+            <a href="{{ url_for('trail_systems') }}">Trail Systems</a>
+            <a href="{{ url_for('equipment') }}">Equipment</a>
+            <a href="{{ url_for('projects') }}">Projects</a>
+            <a href="{{ url_for('tasks') }}">Tasks</a>
+            <a href="{{ url_for('expense_reports') }}">Expense Reports</a>
+            <!-- login/logout -->
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2023 Trail Management System. All rights reserved.</p>
+    </footer>
 </body>
 </html>

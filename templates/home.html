@@ -1,5 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Welcome to the Trail Management System</h1>
+<h1>Welcome to CORBA's Trail Management System</h1>
+
+<div class="cards">
+    <!-- Card for Equipment -->
+    <div class="card">
+        <h3><a href="{{ url_for('equipment') }}">All Equipment</a></h3>
+        <p>View and manage all equipment.</p>
+    </div>
+
+    <!-- Card for Projects -->
+    <div class="card">
+        <h3><a href="{{ url_for('projects') }}">All Projects</a></h3>
+        <p>View and manage all projects.</p>
+    </div>
+
+    <!-- Card for Trail Systems -->
+    <div class="card">
+        <h3><a href="{{ url_for('trail_systems') }}">All Trail Systems</a></h3>
+        <p>View and manage all trail systems.</p>
+    </div>
+
+    <!-- Card for User Profiles -->
+    <div class="card">
+        <h3><a href="{{ url_for('users') }}">User Profiles</a></h3>
+        <p>View and manage user profiles.</p>
+    </div>
+</div>
 {% endblock %}

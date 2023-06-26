@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h1>Edit Trail System</h1>
-<form method="post">
+<h1>New Trail System</h1>
+<form method="POST">
     {{ form.hidden_tag() }}
     <p>
         {{ form.name.label }}<br>
@@ -14,6 +14,10 @@
     <p>
         {{ form.description.label }}<br>
         {{ form.description }}
+    </p>
+    <p>
+        {{ form.map.label }}<br>
+        {{ form.map }}
     </p>
     <p>{{ form.submit() }}</p>
 </form>

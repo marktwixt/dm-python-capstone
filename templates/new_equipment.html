@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Add New Equipment</h1>
+    <form method="post">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" required></textarea><br>
+        <label for="status">Status:</label><br>
+        <input type="text" id="status" name="status" required><br>
+        <label for="maintenance_schedule">Maintenance Schedule:</label><br>
+        <input type="text" id="maintenance_schedule" name="maintenance_schedule" required><br>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

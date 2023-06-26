@@ -22,6 +22,7 @@ class Equipment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(64), nullable=False)  # New status attribute
     maintenance_schedule = db.Column(db.String(128), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 

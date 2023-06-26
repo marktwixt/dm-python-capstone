@@ -4,17 +4,44 @@
     --gray: #C6C7C9;
     --light: #EFC489;
     --white: #FEFEFE;
+    --dark: #272F36;
 }
 
 body {
     font-family: Arial, sans-serif;
-    background-color: var(--white);
-    color: var(--primary);
+    background-color: var(--dark);
+    color: var(--white); /* updated color to white for better contrast */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 20px auto 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
     padding: 20px;
+    background: var(--dark); /* updated background to dark */
+    min-height: calc(100vh - 140px); /* fix */
+}
+
+.container div { /* new rule to style each card */
+    background-color: var(--light);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 h1 {
     color: var(--accent);
+    text-align: center;
 }
 
 a {
@@ -26,11 +53,45 @@ a:hover {
     text-decoration: underline;
 }
 
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary);
+    padding: 20px;
+    width: 100%;
+    color: var(--white);
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.navbar a {
+    color: var(--white);
+    flex-grow: 1;
+    text-align: center;
+    transition: color 0.2s ease-in-out;
+}
+
+.navbar a:hover {
+    color: var(--light);
+}
+
+.navbar-logo {
+    width: 40px;
+    height: 40px;
+    background-image: url("corba_logo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 form {
     background-color: var(--light);
     padding: 20px;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin: 0 auto;
+    width: 90%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 form label {
@@ -38,7 +99,8 @@ form label {
     margin-bottom: 10px;
 }
 
-form input, form textarea {
+form input,
+form textarea {
     width: 100%;
     border: 1px solid var(--gray);
     padding: 10px;
@@ -53,8 +115,31 @@ form button {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
 form button:hover {
     background-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.flash {
+    padding: 20px;
+    color: var(--white);
+    background-color: var(--accent);
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 20px;
+    /* position: fixed; */ /* remove this */
+    width: 100%;
+    /* bottom: 0; */ /* remove this */
+    text-align: center;
+    margin-top: 20px; /* fix */
+    height: 100px; /* fix */
 }

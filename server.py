@@ -1,9 +1,10 @@
 import os
+import sqlalchemy as sa
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from models import User, Project, Task, Equipment, TrailSystem, ExpenseReport, db
 from app import login_manager, app
-from forms import ProjectForm, TaskForm, TrailSystemForm, ExpenseReportForm
+from forms import ProjectForm, TaskForm, TrailSystemForm, ExpenseReportForm, EquipmentForm
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import datetime
@@ -18,7 +19,7 @@ bcrypt = Bcrypt(app)
 def home():
     return render_template('home.html')
 
-# --- Registration/Login/Logout ---
+# --- Registration/Login/Logout/Users ---
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -62,26 +63,58 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
+@app.route('/users', methods=['GET'])
+@login_required
+def users():
+    user_list = User.query.all()
+    return render_template('users.html', users=user_list)
+
 # --- Equipment ---
 
 @app.route('/equipment', methods=['GET', 'POST'])
 @login_required
 def equipment():
+    form = EquipmentForm()
+
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
         status = request.form['status']
         maintenance_schedule = request.form['maintenance_schedule']
 
-        new_equipment = Equipment(name=name, description=description, status=status, maintenance_schedule=maintenance_schedule)
+        new_equipment = Equipment(name=name, description=description, status=status, maintenance_schedule=maintenance_schedule, user_id=current_user.id)
         db.session.add(new_equipment)
         db.session.commit()
 
         flash('Equipment added successfully.', 'success')
         return redirect(url_for('equipment'))
 
-    equipment = Equipment.query.all()
-    return render_template('equipment.html', equipment=equipment)
+    equipment_list = Equipment.query.all()
+    return render_template('equipment.html', equipment_list=equipment_list)
+
+@app.route('/equipment/new', methods=['GET', 'POST'])
+@login_required
+def new_equipment():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        status = request.form['status']
+        maintenance_schedule = request.form['maintenance_schedule']
+
+        new_equipment = Equipment(
+            name=name,
+            description=description,
+            status=status,
+            maintenance_schedule=maintenance_schedule,
+            user_id=current_user.id
+        )
+
+        db.session.add(new_equipment)
+        db.session.commit()
+        flash('Equipment added successfully.', 'success')
+        return redirect(url_for('equipment'))
+
+    return render_template('new_equipment.html')
 
 @app.route('/equipment/<int:equipment_id>', methods=['GET', 'POST'])
 @login_required
@@ -134,10 +167,17 @@ def projects():
 @app.route('/new_project', methods=['GET', 'POST'])
 @login_required
 def new_project():
-    form = ProjectForm()
+    trail_systems = [(ts.id, ts.name) for ts in TrailSystem.query.all()]  # get a list of all trail systems
+    form = ProjectForm(request.form)
+    form.trail_system_id.choices = trail_systems  # set the choices for the trail_system_id field
 
     if form.validate_on_submit():
-        new_project = Project(name=form.name.data, description=form.description.data, status=form.status.data, user_id=current_user.id)
+        name = form.name.data
+        description = form.description.data
+        status = form.status.data
+        trail_system_id = form.trail_system_id.data  # get the selected trail_system_id
+
+        new_project = Project(name=name, description=description, status=status, user_id=current_user.id, trail_system_id=trail_system_id)
         db.session.add(new_project)
         db.session.commit()
 
@@ -182,7 +222,7 @@ def tasks():
         name = request.form['name']
         description = request.form['description']
         status = request.form['status']
-        project_id = request.form['project_id']  # assuming this is provided in the form
+        project_id = request.form['project_id']
 
         new_task = Task(name=name, description=description, status=status, project_id=project_id)
         db.session.add(new_task)
@@ -191,7 +231,7 @@ def tasks():
         flash('Task added successfully.', 'success')
         return redirect(url_for('tasks'))
 
-    tasks = Task.query.filter_by(project_id=project_id).all()  # assuming tasks are tied to a specific project
+    tasks = Task.query.filter_by(project_id=project_id).all()
     return render_template('tasks.html', tasks=tasks)
 
 @app.route('/new_task', methods=['GET', 'POST'])
@@ -242,20 +282,22 @@ def delete_task(task_id):
 @app.route('/trail_systems', methods=['GET', 'POST'])
 @login_required
 def trail_systems():
-    if request.method == 'POST':
-        name = request.form['name']
-        location = request.form['location']
-        description = request.form['description']
+    form = TrailSystemForm()
 
-        new_trail_system = TrailSystem(name=name, location=location, description=description)
+    if form.validate_on_submit():
+        new_trail_system = TrailSystem(
+            name=form.name.data,
+            location=form.location.data,
+            description=form.description.data
+        )
         db.session.add(new_trail_system)
         db.session.commit()
-
         flash('Trail system added successfully.', 'success')
         return redirect(url_for('trail_systems'))
 
     trail_systems = TrailSystem.query.all()
-    return render_template('trail_systems.html', trail_systems=trail_systems)
+    return render_template('trail_systems.html', trail_systems=trail_systems, form=form)
+
 
 @app.route('/new_trail_system', methods=['GET', 'POST'])
 @login_required
@@ -265,8 +307,8 @@ def new_trail_system():
     if form.validate_on_submit():
         new_trail_system = TrailSystem(
             name=form.name.data,
-            description=form.description.data,
-            project_id=form.project_id.data
+            location=form.location.data,
+            description=form.description.data
         )
         db.session.add(new_trail_system)
         db.session.commit()
@@ -275,21 +317,23 @@ def new_trail_system():
 
     return render_template('new_trail_system.html', form=form)
 
+
 @app.route('/trail_systems/<int:trail_system_id>', methods=['GET', 'POST'])
 @login_required
 def single_trail_system(trail_system_id):
     trail_system = TrailSystem.query.get_or_404(trail_system_id)
+    form = TrailSystemForm(obj=trail_system)
 
-    if request.method == 'POST':
-        trail_system.name = request.form['name']
-        trail_system.location = request.form['location']
-        trail_system.description = request.form['description']
-
+    if form.validate_on_submit():
+        trail_system.name = form.name.data
+        trail_system.location = form.location.data
+        trail_system.description = form.description.data
         db.session.commit()
         flash('Trail system updated successfully.', 'success')
         return redirect(url_for('trail_systems'))
 
-    return render_template('edit_trail_system.html', trail_system=trail_system)
+    return render_template('edit_trail_system.html', trail_system=trail_system, form=form)
+
 
 @app.route('/trail_systems/<int:trail_system_id>/delete', methods=['POST'])
 @login_required

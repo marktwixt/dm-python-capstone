@@ -3,12 +3,14 @@
 {% block content %}
 <h1>Equipment</h1>
 <a href="{{ url_for('new_equipment') }}">Add New Equipment</a>
-{% for equipment in equipments %}
+{% for equip in equipment_list %}
     <div>
-        <h2>{{ equipment.name }}</h2>
-        <p>{{ equipment.description }}</p>
-        <a href="{{ url_for('single_equipment', equipment_id=equipment.id) }}">Edit</a>
-        <form method="post" action="{{ url_for('delete_equipment', equipment_id=equipment.id) }}">
+        <h2>{{ equip.name }}</h2>
+        <p>{{ equip.description }}</p>
+        <p>Status: {{ equip.status }}</p>
+        <p>Maintenance Schedule: {{ equip.maintenance_schedule }}</p>
+        <a href="{{ url_for('single_equipment', equipment_id=equip.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('delete_equipment', equipment_id=equip.id) }}">
             <button type="submit">Delete</button>
         </form>
     </div>

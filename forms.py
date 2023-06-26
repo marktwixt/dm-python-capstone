@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField, SelectField, DecimalField
+from wtforms import StringField, IntegerField, TextAreaField, SubmitField, SelectField, DecimalField
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
@@ -7,6 +7,7 @@ class ProjectForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     status = SelectField('Status', choices=[('active', 'Active'), ('completed', 'Completed'), ('on hold', 'On Hold')]) 
+    trail_system_id = SelectField('Trail System ID', coerce=int)  # dropdown field to select the Trail System
     submit = SubmitField('Submit')
 
 class TaskForm(FlaskForm):
@@ -28,4 +29,11 @@ class ExpenseReportForm(FlaskForm):
     amount = DecimalField('Amount', validators=[DataRequired()])  # Changed from cost to amount to match model
     description = TextAreaField('Description', validators=[DataRequired()])
     status = SelectField('Status', choices=[('submitted', 'Submitted'), ('approved', 'Approved'), ('denied', 'Denied')]) 
+    submit = SubmitField('Submit')
+
+class EquipmentForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    status = SelectField('Status', choices=[('active', 'Active'), ('maintenance', 'Maintenance'), ('out of order', 'Out of Order')]) 
+    maintenance_schedule = StringField('Maintenance Schedule', validators=[DataRequired()])
     submit = SubmitField('Submit')

@@ -1,16 +1,51 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 {% block content %}
 <h1>Trail Systems</h1>
-<a href="{{ url_for('new_trail_system') }}">Add New Trail System</a>
-{% for trail_system in trail_systems %}
-    <div>
-        <h2>{{ trail_system.name }}</h2>
-        <p>{{ trail_system.description }}</p>
-        <a href="{{ url_for('single_trail_system', trail_system_id=trail_system.id) }}">Edit</a>
-        <form method="post" action="{{ url_for('delete_trail_system', trail_system_id=trail_system.id) }}">
-            <button type="submit">Delete</button>
-        </form>
-    </div>
-{% endfor %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trail_system in trail_systems %}
+        <tr>
+            <td>{{ trail_system.name }}</td>
+            <td>{{ trail_system.location }}</td>
+            <td>{{ trail_system.description }}</td>
+            <td>
+                <a href="{{ url_for('single_trail_system', trail_system_id=trail_system.id) }}">Edit</a>
+                <form action="{{ url_for('delete_trail_system', trail_system_id=trail_system.id) }}" method="POST">
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this trail system?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Add New Trail System</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(size=32) }}
+    </p>
+    <p>
+        {{ form.location.label }}<br>
+        {{ form.location }}
+    </p>
+    <p>
+        {{ form.description.label }}<br>
+        {{ form.description }}
+    </p>
+    <p>
+        {{ form.map.label }}<br>
+        {{ form.map }}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
 {% endblock %}
