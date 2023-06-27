@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Trail Management System</title>
+    <title class="header-title">Trail Management System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -10,79 +10,78 @@
         <nav class="navbar">
             <div class="navbar-logo"></div>
             <!-- navigation links -->
-            <a class="navbar-btn" href="{{ url_for('home') }}">
-                <svg viewBox="0 0 100 25">
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
+            <a href="{{ url_for('home') }}" class="navbar-btn">
+                <svg width="100%" height="100%" viewBox="0 0 100 30">
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
                 </svg>
                 <span>Home</span>
-            </a>
-            <a class="navbar-btn" href="{{ url_for('users') }}">
-                <svg viewBox="0 0 100 25">
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                </svg>
-                <span>Users</span>
-            </a>
-            <a class="navbar-btn" href="{{ url_for('trail_systems') }}">
-                <svg viewBox="0 0 100 25">
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                </svg>
-                <span>Trail Systems</span>
-            </a>
-            <a class="navbar-btn" href="{{ url_for('equipment') }}">
-                <svg viewBox="0 0 100 25">
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                </svg>
-                <span>Equipment</span>
-            </a>
-            <a class="navbar-btn" href="{{ url_for('projects') }}">
-                <svg viewBox="0 0 100 25">
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                </svg>
-                <span>Projects</span>
-            </a>
-            <a class="navbar-btn" href="{{ url_for('tasks') }}">
-                <svg viewBox="0 0 100 25">
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                </svg>
-                <span>Tasks</span>
-            </a>
-            <a class="navbar-btn" href="{{ url_for('expense_reports') }}">
-                <svg viewBox="0 0 100 25">
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                    <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                </svg>
-                <span>Expense Reports</span>
-            </a>
+                <a href="{{ url_for('users') }}" class="navbar-btn">
+                    <svg width="100%" height="100%" viewBox="0 0 100 30">
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                    </svg>
+                    <span>Users</span>
+                </a>
+                <a href="{{ url_for('trail_systems') }}" class="navbar-btn">
+                    <svg width="100%" height="100%" viewBox="0 0 100 30">
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                    </svg>
+                    <span>Trail Systems</span>
+                </a>
+                <a href="{{ url_for('equipment') }}" class="navbar-btn">
+                    <svg width="100%" height="100%" viewBox="0 0 100 30">
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                    </svg>
+                    <span>Equipment</span>
+                </a>
+                <a href="{{ url_for('projects') }}" class="navbar-btn">
+                    <svg width="100%" height="100%" viewBox="0 0 100 30">
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="{{ url_for('tasks') }}" class="navbar-btn">
+                    <svg width="100%" height="100%" viewBox="0 0 100 30">
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                    </svg>
+                    <span>Tasks</span>
+                </a>
+                <a href="{{ url_for('expense_reports') }}" class="navbar-btn">
+                    <svg width="100%" height="100%" viewBox="0 0 100 30">
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                        <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                    </svg>
+                    <span>Expense Reports</span>
+                </a>
             <!-- login/logout -->
             {% if current_user.is_authenticated %}
-                <a class="navbar-btn" href="{{ url_for('logout') }}">
-                    <svg viewBox="0 0 100 25">
-                        <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                        <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                    </svg>
-                    <span>Logout</span>
-                </a>
+            <a href="{{ url_for('logout') }}" class="navbar-btn">
+                <svg width="100%" height="100%" viewBox="0 0 100 30">
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                </svg>
+                <span>Logout</span>
+            </a>
             {% else %}
-                <a class="navbar-btn" href="{{ url_for('login') }}">
-                    <svg viewBox="0 0 100 25">
-                        <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                        <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                    </svg>
-                    <span>Login</span>
-                </a>
-                <a class="navbar-btn" href="{{ url_for('register') }}">
-                    <svg viewBox="0 0 100 25">
-                        <polyline points="99,1 99,24 1,24 1,1 99,1" class="bg-line" />
-                        <polyline points="99,1 99,24 1,24 1,1 99,1" class="hl-line" />
-                    </svg>
-                    <span>Register</span>
-                </a>
+            <a href="{{ url_for('login') }}" class="navbar-btn">
+                <svg width="100%" height="100%" viewBox="0 0 100 30">
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                </svg>
+                <span>Login</span>
+            </a>
+            <a href="{{ url_for('register') }}" class="navbar-btn">
+                <svg width="100%" height="100%" viewBox="0 0 100 30">
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="bg-line" />
+                    <polyline points="99,1 99,29 1,29 1,1 99,1" class="hl-line" />
+                </svg>
+                <span>Register</span>
+            </a>
             {% endif %}
         </nav>
     </header>

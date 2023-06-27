@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Edit Task</h1>
+<h1 class="header-title">Edit Task</h1>
 <form method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="{{ task.name }}" required>

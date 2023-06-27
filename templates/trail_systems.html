@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Trail Systems</h1>
+<h1 class="header-title">Trail Systems</h1>
 <a href="{{ url_for('new_trail_system') }}">Add New Trail System</a>
 {% for trail_system in trail_systems %}
     <div>

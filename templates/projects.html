@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Projects</h1>
+<h1 class="header-title">Projects</h1>
 <a href="{{ url_for('new_project') }}">Add New Project</a>
 {% for project in projects %}
     <div>

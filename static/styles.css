@@ -45,27 +45,34 @@ h1 {
     text-align: center;
 }
 
+.header-title {
+    color: #FEFEFE;  /* your accent color */
+    text-shadow: 2px 2px 4px #F57921;  /* white shadow effect */
+}
+
 a {
     color: var(--accent);
     text-decoration: none;
 }
 
 .navbar-btn {
-    cursor: pointer;
-    background: transparent;
-    border: 1px solid var(--light);
-    outline: none;
-    transition: 1s ease-in-out;
-    color: var(--white);
-    font-size: 18px;
-    padding: 10px 20px;
     position: relative;
-    overflow: hidden;
+    display: inline-block;
+    padding: 10px;
+    color: #ffffff;
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    transition: color 0.3s;
+    box-sizing: border-box; /* ensure padding is included in width and height */
+}
+
+.navbar-btn span {
+    display: flex;
+    align-items: center; /* center text vertically */
+    justify-content: center; /* center text horizontally */
     position: relative;
+    height: 30px;
+    width: 100px;
+    z-index: 1; /* place text above SVG */
 }
 
 .navbar-btn svg {
@@ -83,6 +90,7 @@ a {
 }
 
 .navbar-btn:hover {
+    color: #F57921;
     background: var(--primary);
     transition: 1s ease-in-out;
 }
@@ -91,9 +99,6 @@ a {
     stroke-dashoffset: -480;
 }
 
-.navbar-btn span {
-    position: relative;
-}
 .navbar-logo {
     width: 40px;
     height: 40px;
