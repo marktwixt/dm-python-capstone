@@ -3,12 +3,13 @@
 {% block content %}
 <h1 class="header-title">Login</h1>
 <form method="post">
+    {{ form.hidden_tag() }}
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+    {{ form.username() }}
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+    {{ form.password() }}
 
-    <button type="submit">Login</button>
+    {{ form.submit() }}
 </form>
 {% endblock %}

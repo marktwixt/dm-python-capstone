@@ -28,10 +28,11 @@
         <p>View and manage user profiles.</p>
     </div>
 
-    <!-- Card for My Profile -->
+<!-- Card for My Profile -->
+{% if current_user.is_authenticated %}
     <div class="card">
         <h3><a href="{{ url_for('user_profile', user_id=current_user.id) }}">My Profile</a></h3>
         <p>View and update your profile.</p>
     </div>
-</div>
+{% endif %}
 {% endblock %}

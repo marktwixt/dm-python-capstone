@@ -5,9 +5,9 @@ from flask_migrate import Migrate
 from models import db, User
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/trail_management'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://waltostrander:Rrus3297!@localhost/trail_management'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploads')  # New config setting
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/uploads')
 
 # Create the upload folder if it doesn't exist
 if not os.path.exists(app.config['UPLOAD_FOLDER']):

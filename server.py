@@ -67,14 +67,17 @@ def user_profile(user_id):
     user = User.query.get_or_404(user_id)
     form = UserProfileForm()
     if form.validate_on_submit():
-        # Check the old password
-        if bcrypt.check_password_hash(user.password, form.old_password.data):
+        # Check the old password if it is entered
+        if form.old_password.data and bcrypt.check_password_hash(user.password, form.old_password.data):
             # update profile details
             user.username = form.username.data
             user.email = form.email.data
             user.bio = form.bio.data
-            user.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            
+
+            # Only update the password if a new one is entered
+            if form.password.data:
+                user.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+
             # if picture field is not empty, save the picture
             if form.picture.data:
                 picture_file = secure_filename(form.picture.data.filename)
@@ -85,7 +88,7 @@ def user_profile(user_id):
             db.session.commit()
             flash('Your account has been updated!', 'success')
             return redirect(url_for('user_profile', user_id=user.id))
-        else:
+        elif form.old_password.data:
             flash('Wrong current password.', 'danger')
     elif request.method == 'GET':
         form.username.data = user.username
