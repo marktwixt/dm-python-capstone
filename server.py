@@ -69,9 +69,19 @@ def user_profile(user_id):
     if form.validate_on_submit():
         # Check the old password
         if bcrypt.check_password_hash(user.password, form.old_password.data):
+            # update profile details
             user.username = form.username.data
             user.email = form.email.data
+            user.bio = form.bio.data
             user.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            
+            # if picture field is not empty, save the picture
+            if form.picture.data:
+                picture_file = secure_filename(form.picture.data.filename)
+                picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_file)
+                form.picture.data.save(picture_path)
+                user.profile_image = picture_file
+
             db.session.commit()
             flash('Your account has been updated!', 'success')
             return redirect(url_for('user_profile', user_id=user.id))
@@ -80,6 +90,7 @@ def user_profile(user_id):
     elif request.method == 'GET':
         form.username.data = user.username
         form.email.data = user.email
+        form.bio.data = user.bio
     return render_template('user_profile.html', user=user, form=form)
 
 # --- Equipment ---

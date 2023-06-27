@@ -13,9 +13,7 @@ body {
     color: var(--white); /* updated color to white for better contrast */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
 }
@@ -28,7 +26,7 @@ body {
     border-radius: 5px;
     padding: 20px;
     background: var(--dark); /* updated background to dark */
-    min-height: calc(100vh - 140px); /* fix */
+    flex: 1 0 auto; /* this line will push the footer down */
 }
 
 
@@ -159,10 +157,7 @@ form button:hover {
     background-color: var(--primary);
     color: var(--white);
     padding: 20px;
-    /* position: fixed; */ /* remove this */
     width: 100%;
-    /* bottom: 0; */ /* remove this */
     text-align: center;
-    margin-top: 20px; /* fix */
-    height: 100px; /* fix */
+    height: 100px; /* fixed height */
 }

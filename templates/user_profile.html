@@ -3,6 +3,13 @@
 {% block content %}
 <h1 class="header-title">{{ user.username }}'s Profile</h1>
 <div>
+    <!-- Display user's profile image if exists -->
+    {% if user.profile_image %}
+        <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) }}" alt="Profile Picture">
+    {% else %}
+        <p>No profile image.</p>
+    {% endif %}
+
     <h2>Email: {{ user.email }}</h2>
     <h2>Projects:</h2>
     {% for project in user.projects %}
@@ -11,5 +18,44 @@
             <p>{{ project.description }}</p>
         </div>
     {% endfor %}
+
+    <!-- User profile edit form -->
+    {% if current_user.id == user.id %}
+        <h2>Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.username.label }}<br>
+                {{ form.username(size=32) }}
+            </div>
+            <div>
+                {{ form.email.label }}<br>
+                {{ form.email(size=32) }}
+            </div>
+            <div>
+                {{ form.bio.label }}<br>
+                {{ form.bio }}
+            </div>
+            <div>
+                {{ form.old_password.label }}<br>
+                {{ form.old_password }}
+            </div>
+            <div>
+                {{ form.password.label }}<br>
+                {{ form.password }}
+            </div>
+            <div>
+                {{ form.confirm_password.label }}<br>
+                {{ form.confirm_password }}
+            </div>
+            <div>
+                {{ form.picture.label }}<br>
+                {{ form.picture() }}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+    {% endif %}
 </div>
 {% endblock %}

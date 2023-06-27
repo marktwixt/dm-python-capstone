@@ -43,6 +43,7 @@ class UserProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     bio = TextAreaField('Bio')
+    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
     old_password = PasswordField('Old Password', validators=[DataRequired()])
     password = PasswordField('New Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('password', 'Passwords must match')])
