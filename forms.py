@@ -14,6 +14,7 @@ class TaskForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     status = SelectField('Status', choices=[('in progress', 'In Progress'), ('completed', 'Completed'), ('not started', 'Not Started')])
+    project_id = IntegerField('Project ID', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class TrailSystemForm(FlaskForm):

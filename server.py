@@ -8,6 +8,8 @@ from forms import ProjectForm, TaskForm, TrailSystemForm, ExpenseReportForm, Equ
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import datetime
+from werkzeug.utils import secure_filename
+
 load_dotenv()
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -218,21 +220,18 @@ def delete_project(project_id):
 @app.route('/tasks', methods=['GET', 'POST'])
 @login_required
 def tasks():
-    if request.method == 'POST':
-        name = request.form['name']
-        description = request.form['description']
-        status = request.form['status']
-        project_id = request.form['project_id']
+    form = TaskForm()
 
-        new_task = Task(name=name, description=description, status=status, project_id=project_id)
+    if form.validate_on_submit():
+        new_task = Task(name=form.name.data, description=form.description.data, status=form.status.data, project_id=form.project_id.data)
         db.session.add(new_task)
         db.session.commit()
 
         flash('Task added successfully.', 'success')
         return redirect(url_for('tasks'))
 
-    tasks = Task.query.filter_by(project_id=project_id).all()
-    return render_template('tasks.html', tasks=tasks)
+    tasks = Task.query.all()  # Fetch all tasks, not filtered by project_id
+    return render_template('tasks.html', tasks=tasks, form=form)
 
 @app.route('/new_task', methods=['GET', 'POST'])
 @login_required
@@ -253,17 +252,18 @@ def new_task():
 @login_required
 def single_task(task_id):
     task = Task.query.get_or_404(task_id)
+    form = TaskForm(obj=task)
 
-    if request.method == 'POST':
-        task.name = request.form['name']
-        task.description = request.form['description']
-        task.status = request.form['status']
+    if form.validate_on_submit():
+        task.name = form.name.data
+        task.description = form.description.data
+        task.status = form.status.data
 
         db.session.commit()
         flash('Task updated successfully.', 'success')
         return redirect(url_for('tasks'))
 
-    return render_template('edit_task.html', task=task)
+    return render_template('edit_task.html', task=task, form=form)
 
 @app.route('/tasks/<int:task_id>/delete', methods=['POST'])
 @login_required
@@ -277,27 +277,11 @@ def delete_task(task_id):
     return redirect(url_for('tasks'))
 
 # --- Trail Systems ---
-# Note: I'm assuming a TrailSystem doesn't belong to a specific user
-
-@app.route('/trail_systems', methods=['GET', 'POST'])
+@app.route('/trail_systems', methods=['GET'])
 @login_required
 def trail_systems():
-    form = TrailSystemForm()
-
-    if form.validate_on_submit():
-        new_trail_system = TrailSystem(
-            name=form.name.data,
-            location=form.location.data,
-            description=form.description.data
-        )
-        db.session.add(new_trail_system)
-        db.session.commit()
-        flash('Trail system added successfully.', 'success')
-        return redirect(url_for('trail_systems'))
-
     trail_systems = TrailSystem.query.all()
-    return render_template('trail_systems.html', trail_systems=trail_systems, form=form)
-
+    return render_template('trail_systems.html', trail_systems=trail_systems)
 
 @app.route('/new_trail_system', methods=['GET', 'POST'])
 @login_required
@@ -305,18 +289,27 @@ def new_trail_system():
     form = TrailSystemForm()
 
     if form.validate_on_submit():
+        f = form.map.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         new_trail_system = TrailSystem(
             name=form.name.data,
             location=form.location.data,
-            description=form.description.data
+            description=form.description.data,
+            map=filename  # store the filename in the database
         )
         db.session.add(new_trail_system)
-        db.session.commit()
-        flash('New trail system added successfully.', 'success')
+
+        try:
+            db.session.commit()
+            flash('New trail system added successfully.', 'success')
+        except Exception as e:
+            flash('An error occurred. ' + str(e), 'error')
+            db.session.rollback()
         return redirect(url_for('trail_systems'))
 
     return render_template('new_trail_system.html', form=form)
-
 
 @app.route('/trail_systems/<int:trail_system_id>', methods=['GET', 'POST'])
 @login_required
@@ -328,17 +321,27 @@ def single_trail_system(trail_system_id):
         trail_system.name = form.name.data
         trail_system.location = form.location.data
         trail_system.description = form.description.data
+        if form.map.data:
+            if trail_system.map:
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], trail_system.map))
+            f = form.map.data
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            trail_system.map = filename
         db.session.commit()
         flash('Trail system updated successfully.', 'success')
         return redirect(url_for('trail_systems'))
 
     return render_template('edit_trail_system.html', trail_system=trail_system, form=form)
 
-
 @app.route('/trail_systems/<int:trail_system_id>/delete', methods=['POST'])
 @login_required
 def delete_trail_system(trail_system_id):
     trail_system = TrailSystem.query.get_or_404(trail_system_id)
+    
+    # delete the associated file
+    if trail_system.map:
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], trail_system.map))
 
     db.session.delete(trail_system)
     db.session.commit()

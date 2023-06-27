@@ -1,15 +1,21 @@
+import os
 from flask import Flask
 from flask_login import LoginManager
-from flask_migrate import Migrate  # New import
+from flask_migrate import Migrate  
 from models import db, User
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/trail_management'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploads')  # New config setting
+
+# Create the upload folder if it doesn't exist
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 db.init_app(app)
 
-migrate = Migrate(app, db)  # New line to initialize Flask-Migrate
+migrate = Migrate(app, db)  
 
 login_manager = LoginManager()
 login_manager.init_app(app)

@@ -55,7 +55,7 @@ class TrailSystem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     location = db.Column(db.String(255))
-    map = db.Column(db.LargeBinary)  # Adjust as needed for your method of storing maps
+    map = db.Column(db.String(255))
     description = db.Column(db.Text)
 
     projects = db.relationship('Project', backref='trail_system', lazy=True)

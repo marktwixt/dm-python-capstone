@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>New Trail System</h1>
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <p>
         {{ form.name.label }}<br>
