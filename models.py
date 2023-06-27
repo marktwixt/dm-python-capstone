@@ -11,6 +11,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    bio = db.Column(db.String(500))  # User's bio, max length 500 characters
+    managed_trail_systems = db.Column(db.String(500))  # Trail systems managed by the user, max length 500 characters
+    profile_pic = db.Column(db.String(255), nullable=True, default='default.jpg')  # Filename of profile picture
 
     equipment = db.relationship('Equipment', backref='user', lazy=True)
     projects = db.relationship('Project', backref='user', lazy=True)

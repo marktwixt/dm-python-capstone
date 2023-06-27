@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField, SubmitField, SelectField, DecimalField
-from wtforms.validators import DataRequired
+from wtforms import StringField, IntegerField, TextAreaField, SubmitField, SelectField, DecimalField, PasswordField
+from wtforms.validators import DataRequired, Email, EqualTo
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 class ProjectForm(FlaskForm):
@@ -38,3 +38,24 @@ class EquipmentForm(FlaskForm):
     status = SelectField('Status', choices=[('active', 'Active'), ('maintenance', 'Maintenance'), ('out of order', 'Out of Order')]) 
     maintenance_schedule = StringField('Maintenance Schedule', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class UserProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    bio = TextAreaField('Bio')
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('password', 'Passwords must match')])
+    submit = SubmitField('Update Profile')
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Sign Up')
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
