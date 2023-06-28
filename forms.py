@@ -21,7 +21,14 @@ class TrailSystemForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    map = FileField('Upload Map', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])  # This is assuming that maps are image files.
+    map = FileField('Upload Map', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'pdf'], 'Images and PDFs only!')])
+    submit = SubmitField('Submit')
+
+class EditTrailSystemForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    map = FileField('Upload Map', validators=[FileAllowed(['jpg', 'png', 'pdf'], 'Images and PDFs only!')])
     submit = SubmitField('Submit')
 
 class ExpenseReportForm(FlaskForm):
@@ -46,7 +53,7 @@ class UserProfileForm(FlaskForm):
     old_password = PasswordField('Old Password')
     password = PasswordField('New Password')
     confirm_password = PasswordField('Confirm New Password', validators=[EqualTo('password')])
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
     submit = SubmitField('Update')
 
 class RegistrationForm(FlaskForm):

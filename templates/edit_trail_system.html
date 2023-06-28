@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1 class="header-title">Edit Trail System</h1>
-<form method="post">
+<form method="POST" action="{{ url_for('single_trail_system', trail_system_id=trail_system.id) }}" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <p>
         {{ form.name.label }}<br>
@@ -14,6 +14,10 @@
     <p>
         {{ form.description.label }}<br>
         {{ form.description }}
+    </p>
+    <p>
+        {{ form.map.label }}<br>
+        <input type="file" name="map">
     </p>
     <p>{{ form.submit() }}</p>
 </form>

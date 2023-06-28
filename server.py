@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from models import User, Project, Task, Equipment, TrailSystem, ExpenseReport, db
 from app import login_manager, app
-from forms import LoginForm, RegistrationForm, UserProfileForm, ProjectForm, TaskForm, TrailSystemForm, ExpenseReportForm, EquipmentForm
+from forms import LoginForm, EditTrailSystemForm, RegistrationForm, UserProfileForm, ProjectForm, TaskForm, TrailSystemForm, ExpenseReportForm, EquipmentForm
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import datetime
@@ -177,17 +177,19 @@ def new_project():
 @login_required
 def single_project(project_id):
     project = Project.query.get_or_404(project_id)
+    form = ProjectForm(obj=project)
 
-    if request.method == 'POST':
-        project.name = request.form['name']
-        project.description = request.form['description']
-        project.status = request.form['status']
+    if form.validate_on_submit():
+        project.name = form.name.data
+        project.description = form.description.data
+        if form.status.data:  # Check if a status was selected
+            project.status = form.status.data
 
         db.session.commit()
         flash('Project updated successfully.', 'success')
         return redirect(url_for('projects'))
 
-    return render_template('edit_project.html', project=project)
+    return render_template('edit_project.html', form=form)
 
 @app.route('/projects/<int:project_id>/delete', methods=['POST'])
 @login_required
@@ -273,38 +275,37 @@ def new_trail_system():
             map=filename  # store the filename in the database
         )
         db.session.add(new_trail_system)
+        db.session.commit()
 
-        try:
-            db.session.commit()
-            flash('New trail system added successfully.', 'success')
-            return redirect(url_for('trail_systems'))  # Moved the redirect here
-        except Exception as e:
-            flash('An error occurred. ' + str(e), 'error')
-            db.session.rollback()
-
+        flash('New trail system added successfully.', 'success')
+        return redirect(url_for('trail_systems')) 
+    else:
+        print("Form data:", form.data)  # This will print the data of the form fields
+        print("Form errors:", form.errors)  # This will print any validation errors
     return render_template('new_trail_system.html', form=form)
 
 @app.route('/trail_systems/<int:trail_system_id>', methods=['GET', 'POST'])
 @login_required
 def single_trail_system(trail_system_id):
     trail_system = TrailSystem.query.get_or_404(trail_system_id)
-    form = TrailSystemForm(obj=trail_system)
+    form = EditTrailSystemForm(obj=trail_system)
 
     if form.validate_on_submit():
         trail_system.name = form.name.data
         trail_system.location = form.location.data
         trail_system.description = form.description.data
-        if form.map.data:
+
+        f = request.files.get('map')
+        if f:
+            # A new file has been uploaded
             if trail_system.map:
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], trail_system.map))
-            f = form.map.data
             filename = secure_filename(f.filename)
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             trail_system.map = filename
         db.session.commit()
         flash('Trail system updated successfully.', 'success')
         return redirect(url_for('trail_systems'))
-
     return render_template('edit_trail_system.html', trail_system=trail_system, form=form)
 
 @app.route('/trail_systems/<int:trail_system_id>/delete', methods=['POST'])
@@ -314,7 +315,9 @@ def delete_trail_system(trail_system_id):
     
     # delete the associated file
     if trail_system.map:
-        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], trail_system.map))
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], trail_system.map)
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
     db.session.delete(trail_system)
     db.session.commit()
