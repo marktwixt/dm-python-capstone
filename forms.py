@@ -1,21 +1,30 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField, SubmitField, SelectField, DecimalField, PasswordField
+from models import TrailSystem, Project
+from wtforms import StringField, IntegerField, TextAreaField, SubmitField, DateField, SelectField, DecimalField, PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 class ProjectForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    status = SelectField('Status', choices=[('active', 'Active'), ('completed', 'Completed'), ('on hold', 'On Hold')]) 
-    trail_system_id = SelectField('Trail System ID', coerce=int)  # dropdown field to select the Trail System
+    status = SelectField('Status', choices=[('active', 'Active'), ('completed', 'Completed'), ('on hold', 'On Hold')])
+    trail_system_id = SelectField('Trail System', coerce=int)  # dropdown field to select the Trail System
     submit = SubmitField('Submit')
+
+    def __init__(self, *args, **kwargs):
+        super(ProjectForm, self).__init__(*args, **kwargs)
+        self.trail_system_id.choices = [(ts.id, ts.name) for ts in TrailSystem.query.all()]
 
 class TaskForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     status = SelectField('Status', choices=[('in progress', 'In Progress'), ('completed', 'Completed'), ('not started', 'Not Started')])
-    project_id = IntegerField('Project ID', validators=[DataRequired()])
+    project_id = SelectField('Project', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+    def __init__(self, *args, **kwargs):
+        super(TaskForm, self).__init__(*args, **kwargs)
+        self.project_id.choices = [(p.id, p.name) for p in Project.query.all()]
 
 class TrailSystemForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -32,10 +41,9 @@ class EditTrailSystemForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class ExpenseReportForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    date_submitted = StringField('Date', validators=[DataRequired()])  # For input type date
-    amount = DecimalField('Amount', validators=[DataRequired()])  # Changed from cost to amount to match model
-    description = TextAreaField('Description', validators=[DataRequired()])
+    date_submitted = StringField('Date', validators=[DataRequired()], render_kw={'type': 'date'})  # For input type date
+    amount = DecimalField('Amount', validators=[DataRequired()])  # Decimal for currency
+    expense_details = TextAreaField('Details', validators=[DataRequired()])
     status = SelectField('Status', choices=[('submitted', 'Submitted'), ('approved', 'Approved'), ('denied', 'Denied')]) 
     submit = SubmitField('Submit')
 

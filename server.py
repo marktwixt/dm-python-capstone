@@ -189,7 +189,7 @@ def single_project(project_id):
         flash('Project updated successfully.', 'success')
         return redirect(url_for('projects'))
 
-    return render_template('edit_project.html', form=form)
+    return render_template('edit_project.html', form=form, project=project)
 
 @app.route('/projects/<int:project_id>/delete', methods=['POST'])
 @login_required
@@ -272,7 +272,7 @@ def new_trail_system():
             name=form.name.data,
             location=form.location.data,
             description=form.description.data,
-            map=filename  # store the filename in the database
+            map=filename
         )
         db.session.add(new_trail_system)
         db.session.commit()
@@ -280,8 +280,8 @@ def new_trail_system():
         flash('New trail system added successfully.', 'success')
         return redirect(url_for('trail_systems')) 
     else:
-        print("Form data:", form.data)  # This will print the data of the form fields
-        print("Form errors:", form.errors)  # This will print any validation errors
+        print("Form data:", form.data)
+        print("Form errors:", form.errors)
     return render_template('new_trail_system.html', form=form)
 
 @app.route('/trail_systems/<int:trail_system_id>', methods=['GET', 'POST'])
@@ -327,18 +327,12 @@ def delete_trail_system(trail_system_id):
 
 # --- Expense Reports ---
 
-@app.route('/expense_reports', methods=['GET'])
-@login_required
-def expense_reports():
-    expense_reports = ExpenseReport.query.filter_by(user_id=current_user.id).all()
-    return render_template('expense_reports.html', expense_reports=expense_reports)
-
 @app.route('/new_expense_report', methods=['GET', 'POST'])
 @login_required
 def new_expense_report():
     form = ExpenseReportForm()
     if form.validate_on_submit():
-        new_expense_report = ExpenseReport(date_submitted=form.date_submitted.data, amount=form.amount.data, description=form.description.data, user_id=current_user.id)
+        new_expense_report = ExpenseReport(date_submitted=form.date_submitted.data, amount=form.amount.data, expense_details=form.expense_details.data, status='submitted', user_id=current_user.id)
         db.session.add(new_expense_report)
         db.session.commit()
         flash('Expense report submitted successfully.', 'success')
@@ -349,17 +343,31 @@ def new_expense_report():
 @login_required
 def single_expense_report(expense_report_id):
     expense_report = ExpenseReport.query.get_or_404(expense_report_id)
+    form = ExpenseReportForm()
 
-    if request.method == 'POST':
-        expense_report.date_submitted = request.form['date_submitted']
-        expense_report.amount = request.form['amount']
-        expense_report.description = request.form['description']
+    if form.validate_on_submit():
+        expense_report.date_submitted = form.date_submitted.data
+        expense_report.amount = form.amount.data
+        expense_report.expense_details = form.expense_details.data
+        expense_report.status = form.status.data
 
         db.session.commit()
         flash('Expense report updated successfully.', 'success')
         return redirect(url_for('expense_reports'))
 
-    return render_template('edit_expense_report.html', expense_report=expense_report)
+    if request.method == 'GET':
+        form.date_submitted.data = expense_report.date_submitted
+        form.amount.data = expense_report.amount
+        form.expense_details.data = expense_report.expense_details
+        form.status.data = expense_report.status
+
+    return render_template('edit_expense_report.html', form=form)
+
+@app.route('/expense_reports', methods=['GET'])
+@login_required
+def expense_reports():
+    expense_reports = ExpenseReport.query.filter_by(user_id=current_user.id).all()
+    return render_template('expense_reports.html', reports=expense_reports)
 
 @app.route('/expense_reports/<int:expense_report_id>/delete', methods=['POST'])
 @login_required
@@ -374,5 +382,5 @@ def delete_expense_report(expense_report_id):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Create all tables
+        db.create_all()
     app.run(debug=True)

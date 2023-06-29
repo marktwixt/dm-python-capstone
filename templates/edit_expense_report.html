@@ -3,12 +3,20 @@
 {% block content %}
 <h1 class="header-title">Edit Expense Report</h1>
 <form method="post">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" value="{{ report.name }}" required>
+    {{ form.hidden_tag() }}
 
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" required>{{ report.description }}</textarea>
+    <label for="date_submitted">Date Submitted:</label>
+    {{ form.date_submitted(id='date_submitted', required=True) }}
 
-    <button type="submit">Save</button>
+    <label for="amount">Amount:</label>
+    {{ form.amount(id='amount', required=True) }}
+
+    <label for="expense_details">Details:</label>
+    {{ form.expense_details(id='expense_details', required=True) }}
+
+    <label for="status">Status:</label>
+    {{ form.status(id='status', required=True) }}
+
+    {{ form.submit() }}
 </form>
 {% endblock %}

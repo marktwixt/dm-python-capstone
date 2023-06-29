@@ -2,13 +2,16 @@
 
 {% block content %}
 <h1 class="header-title">Expense Reports</h1>
-<a href="{{ url_for('new_expense_report') }}">Add New Expense Report</a>
+<a class="button-link" href="{{ url_for('new_expense_report') }}">Add New Expense Report</a>
 {% for report in reports %}
     <div>
         <h2>{{ report.name }}</h2>
-        <p>{{ report.description }}</p>
-        <a href="{{ url_for('single_expense_report', report_id=report.id) }}">Edit</a>
-        <form method="post" action="{{ url_for('delete_expense_report', report_id=report.id) }}">
+        <p>{{ report.expense_details }}</p>
+        <p>{{ report.date_submitted }}</p>
+        <p>{{ report.amount }}</p>
+        <p>Status: {{ report.status }}</p>
+        <a class="button-link" href="{{ url_for('single_expense_report', expense_report_id=report.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('delete_expense_report', expense_report_id=report.id) }}">
             <button type="submit">Delete</button>
         </form>
     </div>
