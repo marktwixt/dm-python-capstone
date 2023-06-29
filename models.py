@@ -70,6 +70,6 @@ class ExpenseReport(db.Model):
     date_submitted = db.Column(db.Date)
     expense_details = db.Column(db.Text)
     amount = db.Column(db.Numeric(9, 2))  # Decimal for currency
-    status = db.Column(db.String(64))  # Adjust as needed
+    status = db.Column(db.String(64))
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

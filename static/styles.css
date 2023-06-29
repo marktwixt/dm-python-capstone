@@ -100,7 +100,7 @@ form input[type="file"] {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
-    box-sizing: border-box; /* include padding and border in element's total width and height */
+    box-sizing: border-box;
 }
 
 form button {
@@ -153,8 +153,8 @@ form button:hover {
     display: inline-block;
     padding: 5px 15px;
     margin: 5px;
-    background-color: #F57921; /* Change to desired background color */
-    color: white; /* Change to desired text color */
+    background-color: #F57921;
+    color: white;
     text-align: center;
     text-decoration: none;
     font-weight: bold;
@@ -163,8 +163,8 @@ form button:hover {
 }
 
 .button-link:hover {
-    background-color: #667B76; /* Change to desired hover background color */
-    color: #F57921; /* Change to desired hover text color */
+    background-color: #667B76;
+    color: #F57921;
 }
 
 .flash {

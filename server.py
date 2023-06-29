@@ -279,9 +279,6 @@ def new_trail_system():
 
         flash('New trail system added successfully.', 'success')
         return redirect(url_for('trail_systems')) 
-    else:
-        print("Form data:", form.data)
-        print("Form errors:", form.errors)
     return render_template('new_trail_system.html', form=form)
 
 @app.route('/trail_systems/<int:trail_system_id>', methods=['GET', 'POST'])
